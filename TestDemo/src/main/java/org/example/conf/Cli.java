@@ -9,18 +9,20 @@ public class Cli {
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
+    private String url = "http://localhost:18000/api/v1/image/check?debug=abc";
+    private String data = "{\"type\":\"1\",\"appId\":\"91000001\",\"cache\":\"1\",\"image\":\"https://scpic.chinaz.net/files/pic/pic9/202204/apic40322.jpg\",\"debug\":\"abc\"}";
+    RequestBody requestBody = RequestBody.create(JSON, data);
+    Request request = new Request.Builder().url(url).post(requestBody).addHeader("X-AppId","91000001").build();
+
 
     private OkHttpClient okHttpClient = new Config().okHttpClient();
 
 
-    public String doPostJson(String url, String json) {
-        return exectePost(url, json, JSON);
+    public String doPostJson() {
+        return exectePost();
     }
 
-    private String exectePost(String url, String data, MediaType contentType) {
-        RequestBody requestBody = RequestBody.create(contentType, data);
-        Request request = new Request.Builder().url(url).post(requestBody).addHeader("X-AppId","91000001").build();
-
+    private String exectePost() {
         return execute(request);
     }
 

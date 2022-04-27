@@ -30,7 +30,7 @@ public class BranchMark {
         for (int i = 0; i < nThread; i++) {
             new Thread(() -> {
                 while (true) {
-                    String s = cli.doPostJson("http://localhost:18000/api/v1/image/check?debug=abc", "{\"type\":\"1\",\"appId\":\"91000001\",\"cache\":\"1\",\"image\":\"https://scpic.chinaz.net/files/pic/pic9/202204/apic40322.jpg\",\"debug\":\"abc\"}");
+                    String s = cli.doPostJson();
                     count++;
                     if (!s.contains("\"code\":0")) {
                         System.out.println(s);
