@@ -15,7 +15,7 @@ public class BranchMark {
                 while (true) {
                     try {
                         Thread.sleep(999L);
-                        System.out.println("当前线程数："+nThread + ",当前请求量：" + (count - preCount));
+                        System.out.println("当前线程数：" + nThread + ",当前请求量：" + (count - preCount));
                         preCount = count;
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
@@ -31,8 +31,10 @@ public class BranchMark {
             new Thread(() -> {
                 while (true) {
                     String s = cli.doPostJson("http://localhost:18000/api/v1/image/check?debug=abc", "{\"type\":\"1\",\"appId\":\"91000001\",\"cache\":\"1\",\"image\":\"https://scpic.chinaz.net/files/pic/pic9/202204/apic40322.jpg\",\"debug\":\"abc\"}");
-                    System.out.println(s);
                     count++;
+                    if (!s.contains("\"code\":0")) {
+                        System.out.println(s);
+                    }
                 }
             }).start();
         }
