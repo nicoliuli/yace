@@ -1,18 +1,22 @@
 import org.example.conf.Cli;
 
 public class BranchMark {
-    private static volatile int i = 0;
+    private static volatile int count = 0;
+    private static int preCount = 0;
+
+    private static volatile int nThread = 0;
 
     public static void main(String[] args) throws Exception {
+        nThread = Integer.parseInt(args[0]);
         Runnable r = new Runnable() {
 
             @Override
             public void run() {
                 while (true) {
-
                     try {
                         Thread.sleep(999L);
-                        System.out.println(i);
+                        System.out.println("当前线程数："+nThread + ",当前请求量：" + (count - preCount));
+                        preCount = count;
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -23,19 +27,15 @@ public class BranchMark {
         t.start();
 
         Cli cli = new Cli();
-        while (true) {
-            String s = cli.doPostJson("http://localhost:18000/api/v1/image/check?debug=abc", "{\"type\":\"1\",\"appId\":\"91000001\",\"cache\":\"1\",\"image\":\"https://scpic.chinaz.net/files/pic/pic9/202204/apic40322.jpg\",\"debug\":\"abc\"}");
-            System.out.println(s);
-            i++;
+        for (int i = 0; i < nThread; i++) {
+            new Thread(() -> {
+                while (true) {
+                    String s = cli.doPostJson("http://localhost:18000/api/v1/image/check?debug=abc", "{\"type\":\"1\",\"appId\":\"91000001\",\"cache\":\"1\",\"image\":\"https://scpic.chinaz.net/files/pic/pic9/202204/apic40322.jpg\",\"debug\":\"abc\"}");
+                    System.out.println(s);
+                    count++;
+                }
+            }).start();
         }
+
     }
-
-    /*public static void callShellByExec(String shellString) {
-        try {
-            Process process = Runtime.getRuntime().exec(shellString);
-            i++;
-        } catch (Throwable e) {
-
-        }
-    }*/
 }
