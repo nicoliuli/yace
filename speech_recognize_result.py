@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 import datetime
 import base64
 import hmac
@@ -11,26 +8,16 @@ from urllib.request import Request, urlopen
 
 pid = '80800001'
 secret_key = b'1RfWfrdrY5Npv1SEDqbfopHkvgxryOQQg2mukpkNDiY='
-endpoint_host = 'asr.ilivedata.com'
-endpoint_path = '/api/v1/speech/recognize/submit'
-endpoint_url = 'https://asr.ilivedata.com/api/v1/speech/recognize/submit'
+endpoint_host = 'asr-nx.ilivedata.com'
+endpoint_path = '/api/v1/speech/recognize/result'
+endpoint_url = 'https://asr-nx.ilivedata.com/api/v1/speech/recognize/result'
 
 
-def recognize(audio_url, language_code, user_id, speaker_diarization):
+def get_result(task_id):
     now_date = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
     params = {
-        'languageCode': language_code,
-        'config': {
-            'codec': "PCM",
-            'sampleRateHertz': 16000
-        },
-        'diarizationConfig': {
-            'enableSpeakerDiarization': speaker_diarization
-        },
-        'uri': audio_url,
-        'userId': user_id,
-	'channel': 2 
+        "taskId": task_id
     }
     query_body = json.dumps(params)
     print(query_body)
@@ -65,7 +52,5 @@ def send(querystring, signature, time_stamp):
 
 
 if __name__ == '__main__':
-
-    audio_uri = 'https://asr-test.s3.cn-northwest-1.amazonaws.com.cn/rcs/90800009/audio/2022/05/09/test_24774b98-5f31-4df6-9124-e1c5ab7dbc54_1652065831997/b99df6ac943840cb8c392fc8355067dd'
-    response = recognize(audio_uri, 'zh-CN', '12345678', True)
+    response = get_result("")
     print(response)
